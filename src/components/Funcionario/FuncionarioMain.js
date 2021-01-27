@@ -13,16 +13,16 @@ const FuncionarioMain = ({flag, user}) => {
     let requests;
     if (doesObjectExist(user) && doesArrayExist(user.requests)) { 
         requests = user.requests.map(request => { 
-            return <div key={v4()} className={`card mx-2 my-2 ${((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL))? "fadee-box":""}`}>
+            return <div key={v4()} className={`card mx-2 my-2 ${((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado !== ESTADO_REQ_INDISPONIVEL))? "fadee-box":""}`}>
                         <div className="card-body">
-                            {((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL)) && <span className={`badge ${(request.estado === ESTADO_REQ_INDISPONIVEL)? "bg-warning":"bg-danger"} state mb-2`}>{(request.estado === ESTADO_REQ_CANCELADA)? "Cancelado": (request.estado === ESTADO_REQ_INDISPONIVEL)? "Indisponivel": "Terminado"}</span>}
+                            {((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado !== ESTADO_REQ_INDISPONIVEL)) && <span className={`badge ${(request.estado === ESTADO_REQ_INDISPONIVEL)? "bg-warning":"bg-danger"} state mb-2`}>{(request.estado === ESTADO_REQ_CANCELADA)? "Cancelado": (request.estado === ESTADO_REQ_INDISPONIVEL)? "Indisponivel": "Terminado"}</span>}
                             <p>{/*<span className="desteny">Destino:</span>*/} {request.destino}</p>
                             <p>{/*<span className="dateTime">Hora: </span>*/} {moment(request.dataHora).fromNow()} </p>
                         </div>
                         <ul className="list-group list-group-flush">
                             {request.consumiveis.map(cons => { 
                                 return  <li className="list-group-item d-flex justify-content-between">
-                                            <span>{cons.consumivel.nome}</span>
+                                            <span  className="text-truncate w-50">{cons.consumivel.nome}</span>
                                             <span className="badge bg-secondary">{cons.quantidade}x</span>
                                             <span className={`${cons.consumivel.dtype === MATERIAL_CONSUMIVEL? "badge bg-primary": "badge bg-warning"}`}>{cons.consumivel.dtype}</span>
                                         </li>
@@ -33,7 +33,7 @@ const FuncionarioMain = ({flag, user}) => {
                             {((request.estado === ESTADO_REQ_NOVA) || (request.estado === ESTADO_REQ_CONFIRMADA)) && <span className={`${request.estado === ESTADO_REQ_NOVA?"btn-table":"btn-table-disabled"} add-btn d-inline-block w-100 text-center `} onClick={e => confirmar(request)} >
                                 {request.estado === ESTADO_REQ_CONFIRMADA? "Confirmado":"confirmar"}
                             </span>}
-                            {((request.estado !== ESTADO_REQ_CANCELADA) && (request.estado !== ESTADO_REQ_INDISPONIVEL)) && <span className="btn-table d-inline-block w-100 text-center" onClick={e => cancelar(request)}>
+                            {((request.estado !== ESTADO_REQ_CANCELADA) && (request.estado !== ESTADO_REQ_INDISPONIVEL) && (request.estado !== ESTADO_REQ_TERMINADA)) && <span className="btn-table d-inline-block w-100 text-center" onClick={e => cancelar(request)}>
                                 {request.estado === ESTADO_REQ_CONFIRMADA? "Terminar":"Indsiponivel"}
                             </span>}
                         </div>
@@ -53,7 +53,7 @@ const FuncionarioMain = ({flag, user}) => {
 
     const cancelar = async (request) => { 
         const estado = request.estado === ESTADO_REQ_CONFIRMADA? ESTADO_REQ_TERMINADA : ESTADO_REQ_INDISPONIVEL;
-        request.set('estado', ESTADO_REQ_INDISPONIVEL);
+        request.set('estado', estado);
         await request.update();
         user.getRequests();
     }
