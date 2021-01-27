@@ -71,5 +71,19 @@ export const getRequestStateColor = (request) => {
     if (state === ESTADO_REQ_NOVA) return 'primary';
     if (state === ESTADO_REQ_CONFIRMADA) return 'success';
     if (state === ESTADO_REQ_CANCELADA) return 'danger';
-    return 'normal';
+    return 'warning';
+}
+
+export const getFromLocalStorage = name => { 
+    const object = localStorage.getItem(name);
+    if((object === null) || (object === undefined)) return null;
+    return JSON.parse(object);
+}
+
+export const saveToLocalStorage = (name, value) => { 
+    localStorage.setItem(name, JSON.stringify(value));
+}
+
+export const removeFromLocalStorage = (name) => { 
+    localStorage.removeItem(name);
 }

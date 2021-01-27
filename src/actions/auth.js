@@ -1,43 +1,55 @@
 import axios from "axios";
 import Usuario from "../model/Usuario";
 import { SET_ALL_USERS, SET_LOGGEG_USER, SET_MANAGED_USER, UPDATE_FLAG } from "../reducers/types";
-import { ROOT_URL, SUCCESS_TOAST } from "../utils/constants";
-import { checkTypeUser, doesObjectExist, getRequestConfigurations, handleError } from "../utils/utils";
+import { ROOT_URL, SUCCESS_TOAST, USER_LOCALSTORAGE } from "../utils/constants";
+import { checkTypeUser, doesObjectExist, getRequestConfigurations, handleError, saveToLocalStorage } from "../utils/utils";
 import { addToastMessage } from "./toast";
 
 
 export const login = (contact, password) => async dispatch => { 
     try {
-        // const requestConfig = getRequestConfigurations();
-        // const URL = `${ROOT_URL}/usuario/login`;
+        if(!contact || !password) return false;
+        const requestConfig = getRequestConfigurations();
+        const URL = `${ROOT_URL}/usuario/login`;
        
-        // let requestBody = {contacto: contact, password};
-        // requestBody = JSON.stringify(requestBody);
-        // const response = await axios.post(URL, requestBody, requestConfig);
+        let requestBody = {contacto: contact, password};
+        requestBody = JSON.stringify(requestBody);
+        const response = await axios.post(URL, requestBody, requestConfig);
 
-        // console.log(`RESPONSE DATA: ${doesObjectExist(response.data)}`)
-
-        // if (!doesObjectExist(response.data)) return dispatch({type: SET_LOGGEG_USER, payload: null})
+        if (!doesObjectExist(response.data)) return dispatch({type: SET_LOGGEG_USER, payload: null})
         
-        // const user = new Usuario(response.data);
-        const user = new Usuario({
-            "nome": "Mac Mahon",
-            "email": "macmahon@gmail.com",
-            "password": "123456",
-            "contacto": "842399398",
-            "genero": "MASCULINO",
-            "cadeira": "Biologia",
-        "numero_requisicoes": 1,
-            "codigo": 7,
-            "typeUser": "DOCENTE"
-        });
+        const user = new Usuario(response.data);
+        // const user = new Usuario({
+        //     "nome": "Manuel Ganco",
+        //     "email": "manuel@gmail.com",
+        //     "password": "123456",
+        //     "contacto": "842299198",
+        //     "genero": "MASCULINO",
+        //     "localizacao": "Campus",
+        //     "codigo": 8,
+        //     "typeUser": "FUNCIONARIO_REQUISICAO"
+        // });
         
+        saveToLocalStorage(USER_LOCALSTORAGE, user);
         dispatch({type: SET_LOGGEG_USER, payload: user});
         dispatch(addToastMessage('Login Successful', SUCCESS_TOAST))
+        return true;
 
     } catch (error) {
         handleError(error);
+        return false;
     }
+}
+
+export const setLoggedInUser = (user) => dispatch => { 
+    dispatch({type: SET_LOGGEG_USER, payload: user});
+}
+
+export const logout = () => dispatch => { 
+    dispatch({
+        type: SET_LOGGEG_USER,
+        payload: null
+    })
 }
 
 export const getAllUsers = () => async dispatch => {

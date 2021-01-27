@@ -35,7 +35,7 @@ const DashboardTables = ({user, consReq, getConsReqCount}) => {
             })
 
             requests = consReq.requests.map(request => { 
-                return <div className="dash-table-request-row d-flex justify-content-between py-3">
+                return <div className="dash-table-request-row d-flex justify-content-between py-2">
                             <div className="prof-icon">
                                <img src={profileDashIcon} alt="profileDashIcon" className="mx-2" />
                                 {`${request.docente.nome} | `}
@@ -91,7 +91,10 @@ const DashboardTables = ({user, consReq, getConsReqCount}) => {
                     </span>
                     <span className="info">{requests.length}</span>
                 </div>
-                {requests}
+                <div className="dash-content">
+                    {requests}
+                </div>
+                
             </div>
         </div>
     )

@@ -1,10 +1,11 @@
-import { ADMIN_ACCOUNT, ERROR_TOAST, MASCULINO, PROFESSOR_ACCOUNT, ROOT_URL, SUCCESS_TOAST } from "../utils/constants";
+import { ADMIN_ACCOUNT, EMPLOYER_ACCOUNT, ERROR_TOAST, MASCULINO, PROFESSOR_ACCOUNT, ROOT_URL, SUCCESS_TOAST } from "../utils/constants";
 import { doesObjectExist, extractUserFields, getRequestConfigurations } from "../utils/utils";
 import {update} from '../actions/admin'
 import store from '../store';
 import axios from "axios";
 import { addToastMessage } from "../actions/toast";
 import Requisicao from "./Requisicao";
+import moment from 'moment';
 
 class Usuario { 
 constructor(responseBody)  {
@@ -13,10 +14,18 @@ if(doesObjectExist(responseBody)) {
         Object.keys(responseBody).forEach(property => { 
             this[property] = responseBody[property];
         })
+
         this.p_nome = responseBody.nome.split(" ")[0];
         this.apelido =  responseBody.nome.split(" ")[1];
         this.requisicao = new Requisicao(this);
-        this.getMyRequests();
+
+
+        if (this.typeUser === PROFESSOR_ACCOUNT) { 
+            this.getMyRequests();
+        } else if (this.typeUser === EMPLOYER_ACCOUNT) { 
+            this.getRequests();
+        }
+
     } else { 
         this.newUser = true;
 
@@ -90,7 +99,6 @@ async save()  {
 }
 
 async getMyRequests() { 
-    // const url_path = (this.type_account === ADMIN_ACCOUNT)? `/deleteAdmin` : (this.type_account === PROFESSOR_ACCOUNT)? '/deleteDocente' : '/deleteFuncReq';
 
     const requestConfig = getRequestConfigurations();
     const requestBody = JSON.stringify(this);
@@ -104,7 +112,6 @@ async getMyRequests() {
                 requisicao.build(req);
                 return requisicao;
             });
-            
         store.dispatch(update());
 
     } catch (error) {
@@ -114,6 +121,31 @@ async getMyRequests() {
 
 }
 
+
+async getRequests() { 
+
+    const requestConfig = getRequestConfigurations();
+    const URL = `${ROOT_URL}/requisicao/getToday`;
+    const today = moment().format("YYYY-MM-DD"); //.subtract(1, "day")
+    const requestBody = JSON.stringify({date: today})
+
+    console.log(today);
+
+    try {
+        
+        const response = await axios.post(URL, requestBody, requestConfig);
+        this.requests = response.data.map( req => {
+            const requisicao = new Requisicao();
+            requisicao.build(req);
+            return requisicao;
+        });
+        store.dispatch(update());
+
+    } catch (error) {
+        console.log(error.message);
+        store.dispatch(addToastMessage(error.message, ERROR_TOAST));
+    }
+}
 
 async delete() { 
     

@@ -64,6 +64,25 @@ body {
   }
 }
 
+.toast { 
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3000;
+}
+
+.toast-success { 
+  color:#158a53 
+}
+
+.toast-loading { 
+  color: var(--color-primary)
+}
+
+.toast-error { 
+  color: var(--color-ternary);
+}
+
 .custom-icon { 
   color: white;
   background-color: var(--color-ternary);
@@ -584,4 +603,16 @@ body {
 .desteny, .dateTime  { 
   color: var(--color-text-faded);
   font-weight: 500;
+}
+
+.fadee-box, .fadee-box li, .fadee-box .d-flex .badge { 
+  background-color: rgba(214, 210, 210, 0.233) !important;
+}
+
+.fadee-box li span, .fadee-box p  {
+  color:rgba(214, 210, 210, 0.856) !important;
+}
+
+.exit-icon:hover { 
+  cursor: pointer !important;
 }

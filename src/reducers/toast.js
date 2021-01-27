@@ -1,4 +1,4 @@
-import { ERROR_TOAST } from '../utils/constants';
+import { ERROR_TOAST, LOADING_TOAST, SUCCESS_TOAST } from '../utils/constants';
 import {ADD_TOAST_MESSAGE, REMOVE_TOAST_MESSAGE} from './types'
 
 const initialState = { 

@@ -32,9 +32,9 @@ class Requisicao {
     }
 
     build(responseBody) { 
-    Object.keys(responseBody).forEach(key => { 
-        this[key] = responseBody[key];
-    })
+        Object.keys(responseBody).forEach(key => { 
+            this[key] = responseBody[key];
+        })
     }
 
     contains (consumivel) { 
@@ -73,12 +73,13 @@ class Requisicao {
 
     async update () { 
         const requestConfig = getRequestConfigurations();
-        const requestBody = JSON.stringify(this);
+        const toSend = {...this, requests: [], funcionario: {...this.funcionario, requests: [] }}
+        const requestBody = JSON.stringify(toSend);
         const URL = `${ROOT_URL}/requisicao/updateReq`;
 
         try {
             await axios.put(URL, requestBody, requestConfig);
-            store.dispatch(addToastMessage('Requisicao Cancelada', SUCCESS_TOAST));
+            store.dispatch(addToastMessage('Requisicao Actualizada', SUCCESS_TOAST));
         } catch (error) {
             console.log(error);
             store.dispatch(addToastMessage(error.message, ERROR_TOAST));

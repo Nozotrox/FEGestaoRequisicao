@@ -1,6 +1,7 @@
 export const ROOT_URL = 'http://localhost:8080/api';
 export const SUCCESS_TOAST = 'SUCCESS_TOAST';
 export const ERROR_TOAST = 'ERROR_TOAST';
+export const LOADING_TOAST = 'LOADING_TOAST';
 export const DASHBOARD_PAGE = 'DASHBOARD_PAGE';
 export const ADMIN_PAGE = 'ADMIN_PAGE';
 export const MASCULINO = 'MASCULINO';
@@ -16,3 +17,5 @@ export const ESTADO_REQ_NOVA = 'NOVA';
 export const ESTADO_REQ_CONFIRMADA = 'CONFIRMADA';
 export const ESTADO_REQ_CANCELADA = 'CANCELADA';
 export const ESTADO_REQ_TERMINADA = 'TERMINADA';
+export const ESTADO_REQ_INDISPONIVEL = 'INDISPONIVEL';
+export const USER_LOCALSTORAGE = 'USER_LOCALSTORAGE';

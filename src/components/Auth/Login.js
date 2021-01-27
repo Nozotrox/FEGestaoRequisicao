@@ -1,18 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { login }  from '../../actions/auth'
+import { login, setLoggedInUser }  from '../../actions/auth'
 import { addToastMessage } from '../../actions/toast'
-import { doesInputTextFieldValueExist } from '../../utils/utils'
-import { ERROR_TOAST } from '../../utils/constants'
+import { doesInputTextFieldValueExist, getFromLocalStorage } from '../../utils/utils'
+import { ERROR_TOAST, USER_LOCALSTORAGE } from '../../utils/constants'
+import { Redirect } from 'react-router-dom'
+import Usuario from '../../model/Usuario'
 
-const Login = ({user, login, addToastMessage}) => {
+const Login = ({user, login, addToastMessage, setLoggedInUser}) => {
     const [state, setState] = useState({
         contact: '',
-        password: ''
+        password: '',
+        loggedIn: false,
     });
 
-    const {contact, password} = state;
+    useEffect(() => { 
+        const localStorageUser = getFromLocalStorage(USER_LOCALSTORAGE);
+        if (localStorageUser) { 
+            const savedUser = new Usuario(localStorageUser);
+            setLoggedInUser(savedUser);
+            setState({...state, loggedIn: true})
+        }
+    }, [])
+
+    const {contact, password, loggedIn} = state;
+
+    if(loggedIn) { 
+        return <Redirect to="/main"/>
+    }
 
     const onChange = (e) => { 
         const targetName = e.target.name;
@@ -29,11 +45,12 @@ const Login = ({user, login, addToastMessage}) => {
         return false;
     }
 
-    const onSubmit = (e) => { 
+    const onSubmit = async (e) => { 
         const areFieldsFilled = verify();
-        if(areFieldsFilled) {
-            login(contact, password);
-        }
+        let result;
+        if (areFieldsFilled) result = await login(contact, password);
+
+        if(result) setState({...state, loggedIn: true})
         
     }
 
@@ -68,15 +85,17 @@ Login.propTypes = {
     user: PropTypes.object,
     login: PropTypes.func,
     addToastMessage: PropTypes.func.isRequired,
+    setLoggedInUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    user: state,
+    user: state.auth.user,
 })
 
 const mapDispatchToProps = {
     login,
     addToastMessage,
+    setLoggedInUser,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -13,8 +13,10 @@ const App = () => {
     <Provider store={store}>
         <Toast/>
         <Router>
-          <Route exact path="/" component={MainPage}/>
+          <Route exact path="/" component={Login}/>
           <Switch>
+            <Route exact path="/main" component={MainPage}/>
+            <Route exact path="/login" component={Login}/>
           </Switch>
         </Router>
     </Provider>
