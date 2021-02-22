@@ -11,7 +11,7 @@ export const getUserCount = (contact, password) => async dispatch => {
         const requestConfig = getRequestConfigurations();
         const URL = `${ROOT_URL}/admin/userCount`;
         console.log(`ROOT_URL: ${ROOT_URL}`)
-        let requestBody = {contacto: 'cromans0@china.com.cn', password: '7tGZ3Huc'};
+        let requestBody = {contacto: contact, password};
         requestBody = JSON.stringify(requestBody);
         const response = await axios.post(URL, requestBody, requestConfig);
     
@@ -54,7 +54,7 @@ export const getConsReqCount = (contact, password) => async dispatch => {
         const requestConfig = getRequestConfigurations();
         let URL = `${ROOT_URL}/admin/consCount`;
         console.log(`ROOT_URL: ${ROOT_URL}`)
-        let requestBody = {contacto: 'cromans0@china.com.cn', password: '7tGZ3Huc'};
+        let requestBody = {contacto: contact, password};
         let response = await axios.post(URL, requestBody, requestConfig);
 
         if(!doesObjectExist(response.data)) return;
@@ -63,10 +63,10 @@ export const getConsReqCount = (contact, password) => async dispatch => {
 
         URL = `${ROOT_URL}/admin/allReq`;
         console.log(`ROOT_URL: ${ROOT_URL}`)
-        requestBody = {contacto: 'cromans0@china.com.cn', password: '7tGZ3Huc'};
+        requestBody = {contacto: contact, password};
         response = await axios.post(URL, requestBody, requestConfig);
 
-        if(!doesObjectExist(response.data)) return;
+        if(!doesObjectExist(response.data)) dataToSet.requests = [];
 
         dataToSet.requests = response.data;
 

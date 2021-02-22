@@ -14,8 +14,8 @@ export const getRequestConfigurations = () => {
 }
 
 export const doesObjectExist = (object) => { 
-    if(object === undefined) return false;
-    if(!object) return false;
+    if (object === undefined) return false;
+    if (!object) return false;
     if (object === null)  return false 
     if (Object.keys(object).length > 0) return true;
     if (!object) return false;

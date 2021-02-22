@@ -14,6 +14,7 @@ import MyRequestsPage from './Docente/MyRequestsPage'
 import FuncionarioMain from './Funcionario/FuncionarioMain'
 import { doesObjectExist, getFromLocalStorage } from '../utils/utils'
 import { Redirect } from 'react-router-dom'
+import UpdatePersonalDataModal from './Shared/UpdatePersonalDataModal'
 
 const MainPage = ({user, setManagedUser, setManagedConsumivel, login}) => {
     const [state, setState] = useState({ 
@@ -53,6 +54,7 @@ const MainPage = ({user, setManagedUser, setManagedConsumivel, login}) => {
                 {((page === DASHBOARD_PAGE) && (user.typeUser === PROFESSOR_ACCOUNT)) && <MainDocente/>}
                 {((page === ADMIN_PAGE) && (user.typeUser === PROFESSOR_ACCOUNT)) && <MyRequestsPage/>}
                 {((page === DASHBOARD_PAGE) && (user.typeUser === EMPLOYER_ACCOUNT)) && <FuncionarioMain/>}
+               
             </div>
         </div>
     )

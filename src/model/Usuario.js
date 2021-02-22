@@ -8,43 +8,43 @@ import Requisicao from "./Requisicao";
 import moment from 'moment';
 
 class Usuario { 
-constructor(responseBody)  {
-if(doesObjectExist(responseBody)) {
-        this.newUser = false; 
-        Object.keys(responseBody).forEach(property => { 
-            this[property] = responseBody[property];
-        })
+    constructor(responseBody)  {
+    if(doesObjectExist(responseBody)) {
+            this.newUser = false; 
+            Object.keys(responseBody).forEach(property => { 
+                this[property] = responseBody[property];
+            })
 
-        this.p_nome = responseBody.nome.split(" ")[0];
-        this.apelido =  responseBody.nome.split(" ")[1];
-        this.requisicao = new Requisicao(this);
+            this.p_nome = responseBody.nome.split(" ")[0];
+            this.apelido =  responseBody.nome.split(" ")[1];
+            this.requisicao = new Requisicao(this);
 
 
-        if (this.typeUser === PROFESSOR_ACCOUNT) { 
-            this.getMyRequests();
-        } else if (this.typeUser === EMPLOYER_ACCOUNT) { 
-            this.getRequests();
+            if (this.typeUser === PROFESSOR_ACCOUNT) { 
+                this.getMyRequests();
+            } else if (this.typeUser === EMPLOYER_ACCOUNT) { 
+                this.getRequests();
+            }
+
+        } else { 
+            this.newUser = true;
+
+            this.contacto = '';
+            this.email = '';
+            this.genero = MASCULINO;
+            this.nome = '';
+            this.password = '';
+            this.departamento = '';
+            this.numero_requisicoes = 1;
+            this.localizacao = '';
+            this.cadeira = '';
+
+            this.requisicao = {}
+            this.p_nome = '';
+            this.apelido = '';
+            this.password_2 = '';  
+            this.type_account = PROFESSOR_ACCOUNT; 
         }
-
-    } else { 
-        this.newUser = true;
-
-        this.contacto = '';
-        this.email = '';
-        this.genero = MASCULINO;
-        this.nome = '';
-        this.password = '';
-        this.departamento = '';
-        this.numero_requisicoes = 1;
-        this.localizacao = '';
-        this.cadeira = '';
-
-        this.requisicao = {}
-        this.p_nome = '';
-        this.apelido = '';
-        this.password_2 = '';  
-        this.type_account = PROFESSOR_ACCOUNT; 
-    }
 }
 
 copy (responseBody) { 
@@ -59,7 +59,18 @@ set (property, value) {
     store.dispatch(update());
 }
 
+validate() { 
+    if (!doesObjectExist(this.p_fnome)) return false;
+    if (!doesObjectExist(this.surname)) return false;
+    if (!doesObjectExist(this.contacto)) return false;
+    if (!doesObjectExist(this.password)) return false;
+    if (!doesObjectExist(this.email)) return false;
+
+    return true;
+}
+
 async _updateUser() { 
+    if (!this.validate()) return store.dispatch(addToastMessage("Falha De Validacao De Dados", ERROR_TOAST));
     const url_path = (this.type_account === ADMIN_ACCOUNT)? `/updateAdmin` : (this.type_account === PROFESSOR_ACCOUNT)? '/updateDocente' : '/updateFuncReq';
 
     const requestConfig = getRequestConfigurations();
@@ -67,8 +78,10 @@ async _updateUser() {
     requestBody = JSON.stringify({...requestBody, codigo: this.codigo});
     const URL = `${ROOT_URL}/usuario${url_path}`;
 
+    console.log(requestBody);
+
     try {
-        await axios.post(URL, requestBody, requestConfig);
+        await axios.put(URL, requestBody, requestConfig);
         store.dispatch(addToastMessage('Usuario Actualizado!', SUCCESS_TOAST));
     } catch (error) {
         console.log(error);
@@ -77,6 +90,7 @@ async _updateUser() {
 }
 
 async save()  {
+    if (!this.validate()) return store.dispatch(addToastMessage("Falha De Validacao De Dados", ERROR_TOAST));
     this.nome = `${this.p_nome} ${this.apelido}`;
     if (!this.newUser) return this._updateUser();
     

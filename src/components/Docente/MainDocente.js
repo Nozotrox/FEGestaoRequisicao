@@ -4,12 +4,13 @@ import { connect } from 'react-redux'
 import AppBar from '../Shared/AppBar'
 import { getAllConsumables } from '../../actions/admin'
 import { doesArrayExist } from '../../utils/utils'
-import { MATERIAL_CONSUMIVEL, MAX_CONSUMABLES_TO_LOAD } from '../../utils/constants'
+import { ERROR_TOAST, MATERIAL_CONSUMIVEL, MAX_CONSUMABLES_TO_LOAD } from '../../utils/constants'
 import { v4 } from 'uuid'
 import CheckoutModal from './CheckoutModal'
 import Requisicao from '../../model/Requisicao'
+import { addToastMessage } from '../../actions/toast'
 
-const MainDocente = ({flag, user, getAllConsumables, allConsumables}) => {
+const MainDocente = ({flag, user, getAllConsumables, allConsumables, addToastMessage}) => {
     const [state, setState] = useState({
         min: 0,
         page: 1,
@@ -97,8 +98,8 @@ const MainDocente = ({flag, user, getAllConsumables, allConsumables}) => {
     }
 
     const addToRequest = (consumable) => {
-        console.log(consumable.quantidade)
         if((!consumable) || (consumable.disponivel === false) || (consumable.quantidade === 0)) return;
+        if (user.requisicao.consumiveis.length >= user.numero_requisicoes) return addToastMessage("Excedeu Limite de Materiais a Requisitar", ERROR_TOAST);
         user.requisicao.add(consumable);
     }
 
@@ -189,6 +190,7 @@ MainDocente.propTypes = {
     getAllConsumables: PropTypes.func.isRequired,
     allConsumables: PropTypes.array,
     flag: PropTypes.bool,
+    addToastMessage: PropTypes.func,
 }
 
 const mapStateToProps = (state) => ({
@@ -199,6 +201,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     getAllConsumables,
+    addToastMessage,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainDocente)

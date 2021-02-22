@@ -13,9 +13,9 @@ const FuncionarioMain = ({flag, user}) => {
     let requests;
     if (doesObjectExist(user) && doesArrayExist(user.requests)) { 
         requests = user.requests.map(request => { 
-            return <div key={v4()} className={`card mx-2 my-2 ${((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado !== ESTADO_REQ_INDISPONIVEL))? "fadee-box":""}`}>
+            return <div key={v4()} className={`card mx-2 my-2 ${((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado === ESTADO_REQ_TERMINADA))? "fadee-box":""}`}>
                         <div className="card-body">
-                            {((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado !== ESTADO_REQ_INDISPONIVEL)) && <span className={`badge ${(request.estado === ESTADO_REQ_INDISPONIVEL)? "bg-warning":"bg-danger"} state mb-2`}>{(request.estado === ESTADO_REQ_CANCELADA)? "Cancelado": (request.estado === ESTADO_REQ_INDISPONIVEL)? "Indisponivel": "Terminado"}</span>}
+                            {((request.estado === ESTADO_REQ_CANCELADA) || (request.estado === ESTADO_REQ_INDISPONIVEL) || (request.estado === ESTADO_REQ_TERMINADA)) && <span className={`badge ${(request.estado === ESTADO_REQ_INDISPONIVEL)? "bg-warning":"bg-danger"} state mb-2`}>{(request.estado === ESTADO_REQ_CANCELADA)? "Cancelado": (request.estado === ESTADO_REQ_INDISPONIVEL)? "Indisponivel": "Terminado"}</span>}
                             <p>{/*<span className="desteny">Destino:</span>*/} {request.destino}</p>
                             <p>{/*<span className="dateTime">Hora: </span>*/} {moment(request.dataHora).fromNow()} </p>
                         </div>

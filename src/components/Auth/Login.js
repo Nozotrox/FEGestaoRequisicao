@@ -13,6 +13,7 @@ const Login = ({user, login, addToastMessage, setLoggedInUser}) => {
         contact: '',
         password: '',
         loggedIn: false,
+        forgotPassword: false,
     });
 
     useEffect(() => { 
@@ -24,7 +25,7 @@ const Login = ({user, login, addToastMessage, setLoggedInUser}) => {
         }
     }, [])
 
-    const {contact, password, loggedIn} = state;
+    const {contact, password, loggedIn, forgotPassword} = state;
 
     if(loggedIn) { 
         return <Redirect to="/main"/>
@@ -54,12 +55,16 @@ const Login = ({user, login, addToastMessage, setLoggedInUser}) => {
         
     }
 
+    const onRecoverPassword =  (e) => { 
+
+    }
+
 
     return (
         <div id="login-background" className="w-100 h-100">
             <div className="overlay"></div>
             <div className="login-box">
-                <form>
+                {!forgotPassword && <form>
                     <h1 className="text-center my-4"> Login </h1>
                     <div className="mb-3">
                         <label htmlFor="email_or_contact" className="form-label info-msg mandatory">Email/Contacto: </label>
@@ -68,13 +73,26 @@ const Login = ({user, login, addToastMessage, setLoggedInUser}) => {
                     <div className="mb-3">
                         <label htmlFor="passwordInput" className="form-label info-msg mandatory">Password: </label>
                         <input type="password" name="password" value={password} onChange={e => onChange(e)} className="form-control" id="passwordInput"/>
-                        <small id="forgot-password" className="form-text text-muted">Esqueci a minha palavra passe.</small>
+                        {/* <small id="forgot-password" className="form-text text-muted">Esqueci a minha palavra passe.</small> */}
 
                     </div>
                     <div className="mb-3 mt-4 d-flex justify-content-center">
                         <button type="button" className="btn btn-primary" onClick={e => onSubmit(e)}>Login</button>
                     </div>
-                </form>
+                </form>}
+
+                {forgotPassword && 
+                <form>
+                    <h1 className="text-center my-4"> Login </h1>
+                    <p class="text-center text-muted text-small"> Apoos introduzir o contacto, diriga-se ao DIC para obter o seu novo password.</p>
+                    <div className="mb-3">
+                        <label htmlFor="email_or_contact" className="form-label info-msg mandatory">Email/Contacto: </label>
+                        <input type="text" name="contact" value={contact} onChange={e => onChange(e)} className="form-control" id="email_or_contact"/>
+                    </div>
+                    <div className="mb-3 mt-4 d-flex justify-content-center">
+                        <button type="button" className="btn btn-primary" onClick={e => onSubmit(e)}>Recuperar</button>
+                    </div>
+                </form>}
 
             </div>
         </div>

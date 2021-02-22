@@ -4,8 +4,9 @@ import { connect } from 'react-redux'
 import { ADMIN_ACCOUNT, EMPLOYER_ACCOUNT, FEMININO, MASCULINO, NAO_BINARIO, PROFESSOR_ACCOUNT } from '../../utils/constants';
 import { getAllUsers, setManagedUser } from '../../actions/auth';
 import Usuario from '../../model/Usuario';
+import { validate } from 'uuid';
 
-const AddEditUserForm = ({flag, mUser, setManagedUser, getAllUsers}) => {
+const AddEditUserForm = ({flag, mUser, setManagedUser, getAllUsers, hideTitle}) => {
 
     const {p_nome, apelido, contacto, email, genero, numero_requisicoes, password, password_2, localizacao, departamento, type_account, cadeira, newUser} = mUser;
 
@@ -25,6 +26,8 @@ const AddEditUserForm = ({flag, mUser, setManagedUser, getAllUsers}) => {
         setManagedUser(new Usuario());
     }
 
+
+
     const saveUser = async () => { 
         await mUser.save();
         setManagedUser(new Usuario());
@@ -33,9 +36,9 @@ const AddEditUserForm = ({flag, mUser, setManagedUser, getAllUsers}) => {
 
     return (
         <div className="dash-table">
-            <div className="dash-table-header text-center">
+            { !hideTitle && <div className="dash-table-header text-center">
                 <h5>Adicionar/Editar</h5>
-            </div>
+            </div>}
             <div className="dash-content px-4 py-4">
                 <form>
                     <p className="text-center">Dados Pessoais</p>
@@ -132,10 +135,10 @@ const AddEditUserForm = ({flag, mUser, setManagedUser, getAllUsers}) => {
                     </div>}
                     
                 </form> 
-                <div>
+                {!hideTitle && <div>
                     <button type="button" className="btn btn-primary" onClick={e => saveUser()}>{newUser? "Adicionar":"Editar"}</button>
                     <button type="button" className="btn btn-light mx-4" onClick={e => clear()} >Limpar</button>
-                </div>
+                </div>}
             </div>
         </div>
                                 
